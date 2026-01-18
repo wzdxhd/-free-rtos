@@ -1,0 +1,30 @@
+# Keil MDK generated files
+*.uvoptx
+*.uvguix.*
+*.scvd
+*.lst
+*.map
+*.o
+*.d
+*.crf
+*.dep
+*.axf
+*.hex
+*.htm
+*.lnp
+*.sct
+*.iex
+build/
+MDK-ARM/DebugConfig/
+MDK-ARM/RTE/
+MDK-ARM/*.uvguix.*
+
+# CubeMX generated garbage
+.mxproject
+
+# JLink
+JLinkLog.txt
+*.jlink
+
+# VSCode (if you use it)
+.vscode/
