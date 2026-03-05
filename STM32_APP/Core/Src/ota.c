@@ -1,13 +1,40 @@
-/*
- * ota.c
- * 重构说明：优化了擦除逻辑，确保与 ESP32 的 ACK 握手兼容
- */
 #include "ota.h"
 
-// 发送 ACK 给 ESP32
-// ESP32 代码中 waitForAck 检测的是 "ACK_OK"
+// 实例化 OTA 全局上下文
+OTA_ContextTypeDef g_ota;
+
+// 初始化/复位 OTA 上下文
+void OTA_Init(void) {
+    g_ota.state = OTA_STATE_IDLE;
+    g_ota.fw_total_size = 0;
+    g_ota.fw_received_size = 0;
+    g_ota.flash_write_addr = 0;
+}
+
+// 发送成功 ACK 给 ESP32，请求下一包
 void OTA_Send_ACK(void) {
-    HAL_UART_Transmit(OTA_UART_HANDLE, (uint8_t*)"ACK_OK", 6, 1000);
+    HAL_UART_Transmit(OTA_UART_HANDLE, (uint8_t*)"ACK_OK", 6, 100);
+}
+
+// 发送失败 NACK 给 ESP32，要求重发当前包
+void OTA_Send_NACK(void) {
+    HAL_UART_Transmit(OTA_UART_HANDLE, (uint8_t*)"NACK_R", 6, 100);
+}
+
+// 查表法软件计算 CRC16 (多项式 0xA001)
+uint16_t CRC16_Calculate(uint8_t *data, uint16_t length) {
+    uint16_t crc = 0xFFFF;
+    for (uint16_t i = 0; i < length; i++) {
+        crc ^= data[i];
+        for (uint8_t j = 0; j < 8; j++) {
+            if (crc & 0x0001) {
+                crc = (crc >> 1) ^ 0xA001;
+            } else {
+                crc >>= 1;
+            }
+        }
+    }
+    return crc;
 }
 
 // 擦除下载区域

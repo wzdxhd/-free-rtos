@@ -126,7 +126,7 @@ int main(void)
   OLED_Refresh(); 
 	
 	// 打印启动日志
-	SendMessage_Printf("App Version 1.0 Started.\r\n");
+	SendMessage_Printf("App Version 2.0 Started.\r\n");
   /* USER CODE END 2 */
 
   /* Call init function for freertos objects (in cmsis_os2.c) */

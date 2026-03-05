@@ -19,9 +19,6 @@ MDK-ARM/DebugConfig/
 MDK-ARM/RTE/
 MDK-ARM/*.uvguix.*
 
-# CubeMX generated garbage
-.mxproject
-
 # JLink
 JLinkLog.txt
 *.jlink
